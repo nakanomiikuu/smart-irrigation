@@ -1,299 +1,347 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Smart Irrigation</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Smart Greenhouse</title>
 <style>
-:root{--bg:#f4efe6;--card:#fff;--ink:#2a1d14;--mut:#8a7b6c;--g:#2f8f4e;--gl:#e3f3e8;--r:#d9534f;--rl:#fbe4e2;--a:#ffb85c;--line:#eee6d8}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.4 Poppins,system-ui,sans-serif}
-#app{max-width:430px;height:100dvh;margin:auto;display:flex;flex-direction:column;position:relative;overflow:hidden}
-header{display:flex;align-items:center;gap:10px;padding:12px 16px 6px}
-.pin{width:36px;height:36px;border-radius:50%;background:#fde3dc;display:grid;place-items:center;font-size:18px}
-header h1{font-size:16px;margin:0;font-weight:600;flex:1}header small{display:block;font-weight:400;color:var(--mut);font-size:11px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--r);display:inline-block;margin-right:4px}.dot.on{background:var(--g)}
-.ib{border:0;background:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer}
-main{flex:1;overflow-y:auto;padding:6px 14px 14px;scroll-behavior:smooth}
-.pg{display:none;animation:in .2s}.pg.on{display:block}@keyframes in{from{opacity:.4}to{opacity:1}}
-.hero{background:linear-gradient(120deg,#ffe29a,#ffb76b);border-radius:22px;padding:14px 16px 12px;position:relative;overflow:hidden}
-.hero .t{font-size:34px;font-weight:600;line-height:1}.hero .s{font-size:12px;opacity:.75;margin-top:2px}.hero .sun{position:absolute;right:14px;top:8px;font-size:40px}
-.chips{display:flex;gap:6px;margin-top:12px}.chips div{flex:1;text-align:center;font-size:10.5px;color:#5b4a3a}
-.chips b{display:block;font-size:13px;color:var(--ink)}
-.pill{display:inline-block;margin-top:3px;background:#fff;border-radius:20px;padding:2px 12px;font-size:11px;font-weight:600;color:var(--g)}.pill.bad{color:var(--r)}
-.card{background:var(--card);border-radius:20px;padding:14px;margin-top:12px}
-h2{font-size:14px;font-weight:600;margin:0 0 10px;text-align:center}h3{font-size:13px;margin:0 0 8px}
-.pump{display:flex;align-items:center;gap:14px}
-.pbtn{width:88px;height:88px;border-radius:50%;border:0;background:#efe8dc;color:var(--mut);display:grid;place-items:center;cursor:pointer;flex:none;transition:.12s;box-shadow:inset 0 0 0 5px #e6dccb}
-.pbtn:active{transform:scale(.94)}.pbtn.on{background:var(--g);color:#fff;box-shadow:0 0 0 6px var(--gl)}
-.pbtn svg{width:34px;height:34px}.pinfo{flex:1;font-size:12px;color:var(--mut)}.pinfo b{display:block;font-size:17px;color:var(--ink)}
-.seg{display:flex;background:#f1ebdf;border-radius:14px;padding:3px;margin-top:12px}
-.seg button{flex:1;border:0;background:none;padding:9px 0;border-radius:11px;font:600 12px Poppins,sans-serif;color:var(--mut);cursor:pointer}
-.seg button.on{background:var(--ink);color:#fff}
-.tank{display:flex;align-items:center;gap:12px;margin-top:12px}.bar{flex:1;height:14px;background:#efe8dc;border-radius:9px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5bb8e8,#2f8fd0);border-radius:9px;transition:width .3s}
-.led{width:12px;height:12px;border-radius:50%;background:#cfc6b8}.led.on{background:var(--r);box-shadow:0 0 0 4px var(--rl)}
-.info{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:8px;gap:8px}.info b{color:var(--ink);font-weight:500;text-align:right}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tile{background:#fff;border:0;border-radius:20px;padding:14px 8px 12px;text-align:center;font:500 13px Poppins,sans-serif;color:var(--ink);cursor:pointer}
-.tile:active{transform:scale(.96)}.tile span{display:grid;place-items:center;width:58px;height:58px;margin:0 auto 6px;border-radius:16px;font-size:28px}
-.tile small{display:block;font-size:10.5px;color:var(--mut);font-weight:400}
-.row{padding:10px 0;border-top:1px solid var(--line)}.row:first-of-type{border-top:0}
-.rh{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px}.rh output{font-weight:600;background:#f1ebdf;border-radius:10px;padding:1px 9px;font-size:12px;white-space:nowrap}
-input[type=range]{width:100%;margin:8px 0 0;height:28px;accent-color:var(--g);background:none}
-.sw{position:relative;width:46px;height:26px;border-radius:14px;border:0;background:#d8cfc0;cursor:pointer;flex:none;transition:.12s}
-.sw:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.12s}
-.sw.on{background:var(--g)}.sw.on:after{left:23px}
-input[type=time],input[type=text],select{font:inherit;border:1px solid var(--line);background:#faf7f1;border-radius:12px;padding:8px 10px;width:100%}
-.btn{width:100%;border:0;background:var(--ink);color:#fff;border-radius:26px;padding:13px;font:600 14px Poppins,sans-serif;margin-top:10px;cursor:pointer}
-.ev{display:flex;align-items:center;gap:10px}.ev>div{flex:1}.ev small{color:var(--mut);display:block;font-size:11px}
-.st{font-size:11px;font-weight:600;border-radius:12px;padding:2px 10px;background:var(--gl);color:var(--g)}.st.bad{background:var(--rl);color:var(--r)}
-.alert{display:none;background:var(--rl);color:var(--r);border-radius:14px;padding:9px 12px;margin-top:10px;font-size:12px;font-weight:500}.alert.on{display:block}
-.back{border:0;background:none;font:600 13px Poppins,sans-serif;color:var(--mut);padding:4px 0 8px;cursor:pointer}
-nav{display:flex;justify-content:space-around;align-items:center;background:#fff;border-radius:26px 26px 0 0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(60,40,20,.06)}
-nav button{border:0;background:none;font:500 12px Poppins,sans-serif;color:var(--mut);height:40px;min-width:40px;border-radius:20px;padding:0 10px;cursor:pointer;display:flex;align-items:center;gap:5px}
-nav button span{font-size:18px}nav button em{display:none;font-style:normal}nav button.on{background:#efe8dc;color:var(--ink)}nav button.on em{display:inline}
-#toast{position:absolute;left:50%;bottom:76px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:9px 16px;border-radius:20px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;max-width:88%;text-align:center;z-index:9}
-#toast.on{opacity:1;transform:translate(-50%,0)}
-#sheet{position:absolute;inset:0;background:rgba(42,29,20,.45);display:none;align-items:flex-end;z-index:8}#sheet.on{display:flex}
-#sheet>div{background:var(--bg);width:100%;border-radius:24px 24px 0 0;padding:18px 16px 22px}
-label{font-size:12px;color:var(--mut);display:block;margin:10px 0 4px}.demo{font-size:10px;background:#fff3cf;color:#8a5a00;border-radius:8px;padding:1px 7px;margin-left:6px}
+:root{--ink:#0f3a4d;--mut:#547887;--o:#f5a623;--g:#1b9a68;--r:#e5484d;--gl:rgba(255,255,255,.62)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;color:var(--ink);font:14px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(165deg,#63b6f3 0%,#a9dfd0 48%,#e4f2a6 100%)}
+#app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;position:relative}
+.hd{padding:12px 16px 6px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ti{font-weight:800;font-size:18px}.sub{font-size:11px;color:var(--mut)}
+.pill{font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;background:var(--gl);display:flex;align-items:center;gap:6px;cursor:pointer}
+.dot{width:8px;height:8px;border-radius:50%;background:#999}.on .dot{background:#2ecc71}.off .dot{background:var(--r)}.demo .dot{background:var(--o)}
+.clock{margin-top:8px;display:flex;align-items:center;gap:12px;background:var(--gl);border:1px solid #fff;border-radius:18px;padding:8px 14px}
+.clock b{font-size:30px;letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1}
+.clock small{display:block;font-size:11px;color:var(--mut)}.clock .ci{font-size:26px}
+main{flex:1;overflow-y:auto;padding:6px 14px 100px}
+.pg{display:none}.pg.on{display:block}
+.card{background:var(--gl);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.85);border-radius:20px;padding:14px;margin-bottom:12px;box-shadow:0 6px 18px rgba(30,90,120,.12)}
+h2{font-size:15px;margin:6px 2px 8px}h2 span{font-size:11px;font-weight:400;color:var(--mut);margin-left:6px}
+.big{font-size:17px;font-weight:800}.mut{color:var(--mut);font-size:12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;background:#fff;border:0;color:var(--ink)}
+button.chip{cursor:pointer}.chip.ok{background:#d9f5e6;color:#12724c}.chip.bad{background:#fde3e3;color:#a52d2d}
+.sens{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.s{background:rgba(255,255,255,.7);border-radius:16px;padding:10px 4px;border:2px solid transparent}
+.s .i{font-size:22px}.s b{display:block;font-size:21px;margin-top:2px}.s b i{font-style:normal;font-size:11px;margin-left:2px}
+.s small{display:block;font-size:11px;font-weight:700}.s em{font-style:normal;font-size:10px;color:var(--mut)}
+.s.w{border-color:var(--o)}.s.d{border-color:var(--r)}.s.w b{color:#c77700}.s.d b{color:var(--r)}
+.warn{border-radius:14px;overflow:hidden;margin-bottom:12px;background:#fff;box-shadow:0 6px 18px rgba(30,90,120,.12)}
+.warn .wh{background:#f0605d;color:#fff;font-weight:800;padding:7px 12px;display:flex;justify-content:space-between}
+.warn.ok .wh{background:var(--g)}.warn .wb{padding:9px 12px;font-size:12.5px}
+.tip{display:flex;gap:8px;font-size:12.5px;padding:3px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hc{background:rgba(255,255,255,.7);border-radius:14px;padding:9px;display:flex;gap:8px;align-items:center;cursor:pointer;border:2px solid transparent}
+.hc.live{border-color:var(--g);background:#e2f7ec}.hc .i{font-size:22px}.hc b{font-size:12.5px;display:block}.hc small{font-size:11px;color:var(--mut)}.hc.live small{color:#12724c;font-weight:700}
+.seg{display:flex;background:rgba(255,255,255,.55);border-radius:24px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:none;font:700 13px inherit;padding:10px;border-radius:20px;color:var(--ink)}
+.seg button.act{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.12);color:#0b6b4a}
+.dv{display:flex;align-items:center;gap:10px}.dv .i{font-size:26px}.dv .g{flex:1}.dv b{font-size:14px;display:block}
+.dv.live b+small{color:#12724c;font-weight:700}.dv small{font-size:12px;color:var(--mut)}
+.tg{width:58px;height:32px;border-radius:16px;border:0;background:#b7c9d1;position:relative;flex:none;transition:.15s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.tg.on{background:var(--g)}.tg.on::after{left:29px}.tg:disabled{opacity:.45}
+.btn{width:100%;border:0;border-radius:24px;padding:13px;font:800 14px inherit;background:var(--o);color:#3d2a00;margin-top:10px}
+.btn:disabled{opacity:.45}
+.du{display:flex;gap:8px;margin-top:10px;align-items:center}
+.in{flex:1;display:flex;align-items:center;background:#fff;border-radius:14px;padding:4px 12px}
+.in input{width:100%;border:0;font:800 22px inherit;color:var(--ink);background:none;outline:0;min-width:0;text-align:center}
+.in span{font-size:12px;color:var(--mut);font-weight:700}
+input[type=range]{width:100%;margin:12px 0 2px;accent-color:var(--g);height:28px}
+input[type=time]{font:800 26px inherit;border:0;background:#fff;border-radius:14px;padding:6px 12px;color:var(--ink);outline:0}
+.pv{font-size:12.5px;font-weight:700;color:#12724c;margin-top:4px}
+.lb{font-size:11px;font-weight:700;color:var(--mut);margin-top:12px}
+.li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed rgba(15,58,77,.15);font-size:12.5px}
+.li:last-child{border:0}.li b{white-space:nowrap}.li .a{color:var(--r);font-weight:800}
+nav{position:absolute;left:18px;right:18px;bottom:14px;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border-radius:40px;display:flex;justify-content:space-around;padding:6px;box-shadow:0 8px 24px rgba(30,90,120,.2)}
+nav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;font:700 10px inherit;color:var(--mut);gap:1px;flex:1}
+nav button span{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:20px}
+nav button.on{color:var(--ink)}nav button.on span{background:var(--o);box-shadow:0 0 0 4px #ffe8b8}
+.cfg{position:absolute;inset:0;background:rgba(10,40,30,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}.cfg.show{display:flex}
+.box{background:#fff;border-radius:18px;padding:16px;width:100%;max-width:340px}.box h3{margin-bottom:6px}.box p{font-size:12px;color:var(--mut);margin-bottom:8px}
+.box input{width:100%;padding:10px;border:1.5px solid #cfe0d6;border-radius:10px;font:13px monospace;margin-bottom:8px}
+.box .b{display:flex;gap:6px}.box button{flex:1;border:0;border-radius:20px;padding:10px;font:700 13px inherit}.okb{background:var(--o)}.nob{background:#e6f1ea}
 </style>
-</head>
-<body>
+<style>
+/* ===== TAMBAHAN: Ventilasi Servo (V21-V23, V25, V26) ===== */
+.gw{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.gw svg{width:150px;height:auto;flex:none}.gw b{font-size:28px;line-height:1;display:block}
+.gw small{font-size:11px;color:var(--mut);display:block;margin-top:2px}
+.nd{transition:transform .25s}
+.xl{opacity:.5;pointer-events:none}
+</style>
+</head><body>
 <div id="app">
-<header>
-  <div class="pin">🌱</div>
-  <h1>Kebun Smart Irrigation<small><i class="dot" id="dot"></i><span id="conn">Menghubungkan…</span></small></h1>
-  <button class="ib" id="cfgBtn" aria-label="Koneksi">⚙️</button>
-</header>
-
-<main id="main">
-<!-- BERANDA -->
-<section class="pg on" id="p-home">
-  <div class="hero">
-    <div class="sun">⛅</div>
-    <div class="t" id="tTemp">--°C</div>
-    <div class="s" id="tSoil">Kondisi tanah: --</div>
-    <div class="chips">
-      <div>Udara<b id="cHum">--%</b><span class="pill" id="pHum">-</span></div>
-      <div>Tanah<b id="cSoil">--%</b><span class="pill" id="pSoil">-</span></div>
-      <div>Air tangki<b id="cTank">--%</b><span class="pill" id="pTank">-</span></div>
-    </div>
-  </div>
-  <div class="alert" id="alertBar"></div>
-  <div class="card">
-    <h2>Kendali pompa</h2>
-    <div class="pump">
-      <button class="pbtn" id="pump" aria-label="Pompa ON/OFF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3v9M6.3 6.5a8 8 0 1 0 11.4 0"/></svg></button>
-      <div class="pinfo"><b id="pumpTxt">--</b>Ketuk untuk menyalakan / mematikan. Perintah langsung dikirim ke alat.</div>
-    </div>
-    <div class="seg" data-seg></div>
-    <div class="tank"><div class="led" id="led"></div><div class="bar"><i id="tankBar"></i></div><b id="tankPct">--%</b></div>
-    <div class="info"><span>Peringatan air</span><b id="v7">-</b></div>
-    <div class="info"><span>Status jeda</span><b id="v18">-</b></div>
-    <div class="info"><span>Jam alat</span><b id="v15">-</b></div>
-  </div>
-  <div class="card" style="background:none;padding:0;margin-top:14px">
-    <h2>Kelola kebun</h2>
-    <div class="grid">
-      <button class="tile" data-go="pump"><span style="background:#dff0fb">💧</span>Pompa<small>Mode &amp; batas nyala</small></button>
-      <button class="tile" data-go="sched"><span style="background:#fff0cf">⏰</span>Jadwal<small>2 jadwal siram</small></button>
-      <button class="tile" data-go="sensor"><span style="background:#e3f3e8">📏</span>Sensor<small>Tangki &amp; kalibrasi</small></button>
-      <button class="tile" data-go="alert"><span style="background:#fbe4e2">🔔</span>Peringatan<small>Ambang &amp; event</small></button>
-    </div>
-  </div>
-</section>
-
-<!-- POMPA -->
-<section class="pg" id="p-pump">
-  <button class="back" data-go="home">‹ Beranda</button>
-  <div class="card" style="margin-top:0"><h2>Mode pompa</h2><div class="seg" data-seg style="margin-top:0"></div>
-    <div class="info"><span>Manual: pompa dikendalikan lewat tombol.</span></div>
-    <div class="info"><span>Auto: menyala saat tanah kering.</span></div>
+ <div class="hd">
+  <div class="row"><div><div class="ti">🌱 Smart Greenhouse</div><div class="sub" id="upd">Menghubungkan…</div></div>
+   <div class="pill" id="conn" onclick="cfg(1)"><i class="dot"></i><span id="connT">…</span> ⚙</div></div>
+  <div class="clock"><span class="ci">🕒</span><div><b id="clk">--:--:--</b><small>Jam alat · WITA</small></div></div>
+ </div>
+ <main>
+  <section class="pg on" id="p0">
+   <div class="card"><div class="big" id="hl">Memuat…</div><div class="mut" id="hs"></div>
+    <div class="chips"><button class="chip" id="hm" onclick="go(1)"></button><span class="chip" id="hn"></span></div></div>
+   <h2>Kondisi Greenhouse</h2>
+   <div class="card"><div class="sens">
+    <div class="s" id="s0"><div class="i">🌡️</div><small>Suhu</small><b><span id="v0">--</span><i>°C</i></b><em>Ideal &lt; 30</em></div>
+    <div class="s" id="s1"><div class="i">💧</div><small>Kelembapan</small><b><span id="v1">--</span><i>%</i></b><em>Ideal 60–80</em></div>
+    <div class="s" id="s2"><div class="i">☀️</div><small>Cahaya</small><b><span id="v2">--</span><i>lx</i></b><em>Ideal 1–400</em></div></div></div>
+   <div class="warn" id="wn"><div class="wh"><span id="wt">Peringatan</span><span>!</span></div><div class="wb" id="wb"></div></div>
+   <div class="card"><div class="lb" style="margin:0 0 4px">Saran untuk Anda</div><div id="tips"></div></div>
+   <h2>Perangkat <span>ketuk untuk kontrol</span></h2>
+   <div class="grid2" id="hcs"></div>
+  </section>
+  <section class="pg" id="p1">
+   <div class="seg"><button id="mA" onclick="setMode(0)">⚙ Otomatis</button><button id="mM" onclick="setMode(1)">✋ Manual</button></div>
+   <div class="mut" id="hint" style="margin:-4px 4px 12px"></div>
+   <div id="dvs"></div>
+   <div class="card" id="pc"><div class="dv" id="pcd"><span class="i">💧</span><div class="g"><b>Pompa Air</b><small id="pst">--</small></div></div>
+    <button class="btn" id="pgo" onclick="pumpGo()">💧 Siram sekarang</button>
+    <div class="mut" id="pnote" style="margin-top:6px"></div>
+    <div class="lb">LAMA PENYIRAMAN MANUAL</div>
+    <div id="d20"></div></div>
+  </section>
+  <section class="pg" id="p2">
+   <div class="mut" style="margin:0 4px 10px">Atur jam mulai & lama penyiraman. Jadwal tersimpan di alat dan jalan tiap hari.</div>
+   <div id="sch"></div>
+  </section>
+  <section class="pg" id="p3">
+   <h2>Notifikasi Blynk <span>jeda antar notifikasi 60 detik</span></h2>
+   <div class="card" id="evs"></div>
+   <h2>Cara Alat Bekerja</h2>
+   <div class="card" id="how"></div>
+  </section>
+ </main>
+ <nav id="nav"></nav>
+ <div class="cfg" id="cfg"><div class="box"><h3>Koneksi Blynk</h3>
+  <p>Isi Auth Token device. Kosongkan untuk mode Demo (simulasi tanpa alat).</p>
+  <input id="tok" placeholder="Auth Token" autocomplete="off">
+  <div class="b"><button class="nob" onclick="cfg(0)">Batal</button><button class="okb" onclick="saveTok()">Simpan</button></div></div></div>
 </div>
-  <div class="card"><h3>Batas waktu nyala</h3><div data-list="pump"></div></div>
-</section>
-
-<!-- JADWAL -->
-<section class="pg" id="p-sched">
-  <button class="back" data-go="home">‹ Beranda</button>
-  <div class="card" style="margin-top:0" id="sc1"></div>
-  <div class="card" id="sc2"></div>
-</section>
-
-<!-- SENSOR -->
-<section class="pg" id="p-sensor">
-  <button class="back" data-go="home">‹ Beranda</button>
-  <div class="card" style="margin-top:0"><h3>Sensor tangki air</h3><div class="info" style="margin:0 0 4px"><span>Jarak sensor ke permukaan air. PENUH harus lebih kecil dari HABIS.</span></div><div data-list="tank"></div></div>
-  <div class="card"><h3>Kalibrasi DHT22</h3><div data-list="dht"></div></div>
-</section>
-
-<!-- PERINGATAN -->
-<section class="pg" id="p-alert">
-  <button class="back" data-go="home">‹ Beranda</button>
-  <div class="card" style="margin-top:0"><h3>Ambang peringatan</h3><div data-list="thr"></div></div>
-  <div class="card"><h3>Event notifikasi</h3><div id="evList"></div></div>
-  <div class="card"><h3>Riwayat sesi ini</h3><div id="log" class="info" style="display:block;margin:0">Belum ada event.</div></div>
-</section>
-</main>
-
-<nav id="nav">
-  <button data-go="home" class="on"><span>🏠</span><em>Beranda</em></button>
-  <button data-go="pump"><span>💧</span><em>Pompa</em></button>
-  <button data-go="sched"><span>⏰</span><em>Jadwal</em></button>
-  <button data-go="sensor"><span>📏</span><em>Sensor</em></button>
-  <button data-go="alert"><span>🔔</span><em>Event</em></button>
-</nav>
-
-<div id="toast"></div>
-<div id="sheet"><div>
-  <h3>Koneksi Blynk <span class="demo" id="demoTag"></span></h3>
-  <label>Auth Token (kosongkan = mode demo)</label><input type="text" id="fTok" autocomplete="off" autocapitalize="off">
-  <label>Server (sesuai region akun)</label>
-  <select id="fSrv"><option>blynk.cloud</option><option>sgp1.blynk.cloud</option><option>blr1.blynk.cloud</option><option>fra1.blynk.cloud</option><option>lon1.blynk.cloud</option><option>ny3.blynk.cloud</option></select>
-  <button class="btn" id="fSave">Simpan &amp; hubungkan</button>
-  <button class="back" id="fClose" style="width:100%;margin-top:6px">Tutup</button>
-</div></div>
-</div>
-
 <script>
-/* ===== KONFIGURASI ===== */
-const POLL_MS = 700;                 // interval tarik data alat → app (makin kecil makin cepat)
-const MODES = ['Manual','Auto']; // V8: 0 = Manual, 1 = Auto
-const DBL = new Set([0,1,20,21,22,23,25,26]);       // Double 1 desimal
-const STR = new Set([6,7,9,11,15,18]);              // String
-const DEF = {4:0,5:0,8:0,9:'08:00',10:5,11:'17:00',12:5,13:1,14:1,16:120,17:20,19:15,20:5,21:20,22:0,23:0,24:20,25:20,26:40,27:60,28:60,29:1,30:1,31:1};
-/* pin, label, unit, min, max, step */
-const LISTS = {
- pump:[[16,'Maks. lama nyala, Auto','detik',0,21600,10],[17,'Jeda setelah pompa mati, Auto','menit',0,1440,1],[19,'Maks. lama nyala, Manual','menit',0,240,1]],
- tank:[[20,'Jarak sensor saat tangki PENUH','cm',2,400,.1],[21,'Jarak sensor saat tangki HABIS','cm',2,400,.1]],
- dht:[[22,'Offset suhu DHT22','°C',-20,20,.1],[23,'Offset kelembapan DHT22','%RH',-30,30,.1]],
- thr:[[24,'Ambang tanah kering','%',1,95,1],[25,'Batas suhu rendah','°C',0,60,.1],[26,'Batas suhu tinggi','°C',0,60,.1],[27,'Tunda WiFi terputus','detik',5,3600,1],[28,'Jeda ulang pengingat','menit',0,1440,1]]
-};
-const SCHED=[{t:9,d:10,on:13,sel:'#sc1',n:'Jadwal 1'},{t:11,d:12,on:14,sel:'#sc2',n:'Jadwal 2'}];
-const EVENTS=[
- {k:'air_habis',n:'Air tangki habis',d:'Tangki kosong',sw:0},
- {k:'tanah_kering',n:'Tanah kering',d:'Kelembapan tanah ≤ ambang',sw:29},
- {k:'suhu_tidak_wajar',n:'Suhu tidak wajar',d:'Di luar batas rendah / tinggi',sw:30},
- {k:'wifi_terputus',n:'WiFi alat terputus',d:'Alat offline ≥ tunda WiFi',sw:31}];
+/* KONFIGURASI: isi TOKEN, atau lewat tombol ⚙ / URL ?token=xxxx. Kosong = Demo. */
+var TOKEN="", HOST="https://blynk.cloud", POLL_MS=1000;
+var T={ON:30,OFF:28,WARN:35,PUMP:33,HLOW:60,HHIGH:80,LLOW:1,LHIGH:400};
+var STR={6:1,13:1,15:1,19:1}, LIM={14:[1,240],16:[1,240],20:[1,600]};
+var S={0:null,1:null,2:null,3:0,4:0,5:0,6:'Normal',7:0,8:0,9:0,10:0,11:0,12:0,13:'08:00',14:5,15:'17:00',16:5,17:1,18:1,19:'',20:5};
+var DEV=[{n:'Kipas',ic:'🌀',st:3,cmd:5,on:'Menyala',off:'Mati'},
+ {n:'Ventilasi',ic:'🪟',st:7,cmd:8,on:'Terbuka penuh',off:'Terbuka sebagian'},
+ {n:'Lampu LED Cahaya',ic:'💡',st:12,cmd:11,on:'Menyala',off:'Mati'}];
+var EV=[['suhu_tinggi','Suhu ≥ 35 °C','Kritis',function(){return S[0]>=T.WARN}],
+ ['kelembapan_rendah','Kelembapan < 60 %','Peringatan',function(){return S[1]!=null&&S[1]<T.HLOW}],
+ ['kelembapan_tinggi','Kelembapan > 80 %','Peringatan',function(){return S[1]>T.HHIGH}],
+ ['cahaya_rendah','Cahaya < 1 lx','Peringatan',function(){return S[2]!=null&&S[2]<T.LLOW}],
+ ['cahaya_tinggi','Cahaya > 400 lx','Peringatan',function(){return S[2]>T.LHIGH}],
+ ['sensor_dht_error','Sensor DHT22 gagal baca 3×','Kritis',0],
+ ['sensor_bh1750_error','Sensor BH1750 gagal baca 3×','Kritis',0],
+ ['pompa_batas_waktu','Pompa nyala > 10 menit (dihentikan paksa)','Kritis',0]];
+var pend={}, online=false, demo=false, busy=false, tab=0, lastClk='', clk={s:null,at:0,sec:false};
+try{var q=new URLSearchParams(location.search).get('token');if(q)localStorage.setItem('gh_tok',q);TOKEN=TOKEN||localStorage.getItem('gh_tok')||''}catch(e){}
+demo=!TOKEN;
+function $(i){return document.getElementById(i)}
+function cls(e,c,on){e.classList[on?'add':'remove'](c)}
+function sv(id,v,f){var e=$(id);if(f||document.activeElement!==e)e.value=v}
+function fd(s){s=Math.round(s);var h=Math.floor(s/3600),m=Math.floor(s%3600/60),r=s%60,o=[];if(h)o.push(h+' jam');if(m)o.push(m+' mnt');if(r||!o.length)o.push(r+' dtk');return o.join(' ')}
+function p2(n){return(n<10?'0':'')+n}
+function addMin(t,m){var a=String(t).split(':'),x=((+a[0]||0)*60+(+a[1]||0)+m)%1440;return p2(Math.floor(x/60))+':'+p2(x%60)}
 
-/* ===== STATE ===== */
-const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const S=Object.assign({},DEF,{0:0,1:0,2:0,3:0,6:'-',7:'-',15:'--:--',18:'-'});
-const hold={}; let online=false, ping=0, drag=0, first=true, last={}, LOG=[];
-let cfg={token:'',server:'blynk.cloud'};
-try{const q=new URLSearchParams(location.search),sv=JSON.parse(localStorage.getItem('si_cfg')||'{}');
- cfg.token=q.get('token')||sv.token||'';cfg.server=q.get('server')||sv.server||'blynk.cloud';}catch(e){}
-const demo=()=>!cfg.token;
-const fm=(p,v)=>DBL.has(p)?(+v).toFixed(1):Math.round(v);
+/* ===== bangun UI ===== */
+var NAV=[['🏠','Beranda'],['🎛️','Kontrol'],['⏰','Jadwal'],['🔔','Info']];
+$('nav').innerHTML=NAV.map(function(n,i){return '<button id="n'+i+'" onclick="go('+i+')"><span>'+n[0]+'</span>'+n[1]+'</button>'}).join('');
+function go(i){tab=i;for(var k=0;k<4;k++){cls($('p'+k),'on',k===i);cls($('n'+k),'on',k===i)}$('p'+i).parentNode.scrollTop=0}
+DEV.forEach(function(d,i){
+ $('hcs').insertAdjacentHTML('beforeend','<div class="hc" id="hc'+i+'" onclick="go(1)"><span class="i">'+d.ic+'</span><div><b>'+d.n+'</b><small id="hst'+i+'">--</small></div></div>');
+ $('dvs').insertAdjacentHTML('beforeend','<div class="card"><div class="dv" id="dc'+i+'"><span class="i">'+d.ic+'</span><div class="g"><b>'+d.n+'</b><small id="ds'+i+'">--</small></div><button class="tg" id="tg'+i+'" onclick="toggle('+i+')"></button></div></div>');});
+$('hcs').insertAdjacentHTML('beforeend','<div class="hc" id="hcp" onclick="go(1)"><span class="i">💧</span><div><b>Pompa Air</b><small id="hstp">--</small></div></div>');
+function durH(p,hl,ll,chips){return '<div class="du"><div class="in"><input type="number" inputmode="numeric" min="0" id="h'+p+'" onchange="commit('+p+')"><span>'+hl+'</span></div><div class="in"><input type="number" inputmode="numeric" min="0" id="l'+p+'" onchange="commit('+p+')"><span>'+ll+'</span></div></div>'+
+ '<input type="range" id="r'+p+'" min="'+LIM[p][0]+'" max="'+LIM[p][1]+'" oninput="rin('+p+')" onchange="put('+p+',+this.value)">'+
+ '<div class="pv" id="t'+p+'"></div><div class="chips">'+chips.map(function(c){return '<button class="chip" onclick="put('+p+','+c[1]+')">'+c[0]+'</button>'}).join('')+'</div>'}
+$('d20').innerHTML=durH(20,'mnt','dtk',[['5 dtk',5],['10 dtk',10],['30 dtk',30],['1 mnt',60],['5 mnt',300]]);
+[[1,13,14,17],[2,15,16,18]].forEach(function(j){
+ $('sch').insertAdjacentHTML('beforeend','<div class="card"><div class="dv"><span class="i">🚿</span><div class="g"><b>Jadwal Penyiraman '+j[0]+'</b><small id="sa'+j[0]+'"></small></div><button class="tg" id="tj'+j[0]+'" onclick="put('+j[3]+',+S['+j[3]+']?0:1)"></button></div>'+
+ '<div class="lb">JAM MULAI</div><input type="time" id="tm'+j[1]+'" onchange="if(this.value)put('+j[1]+',this.value)">'+
+ '<div class="lb">LAMA PENYIRAMAN</div><div id="d'+j[2]+'"></div><div class="mut" id="se'+j[0]+'" style="margin-top:8px"></div></div>');
+ $('d'+j[2]).innerHTML=durH(j[2],'jam','mnt',[['5 mnt',5],['10 mnt',10],['15 mnt',15],['30 mnt',30],['1 jam',60]]);});
+$('evs').innerHTML=EV.map(function(e,i){return '<div class="li"><span><b>'+e[1]+'</b><br><span class="mut">'+e[0]+' · '+e[2]+'</span></span><span id="ea'+i+'" class="mut">—</span></div>'}).join('');
+$('how').innerHTML=[['🌀','Kipas menyala ≥ '+T.ON+' °C, mati ≤ '+T.OFF+' °C'],['🪟','Ventilasi buka penuh (90°) saat kipas menyala, sebagian (20°) saat mati'],
+ ['💧','Suhu ≥ '+T.PUMP+' °C: pompa siram 30 dtk, jeda minimal 5 menit'],['⏱️','Pompa otomatis berhenti paksa bila nyala > 10 menit'],
+ ['💡','LED cahaya menyala saat cahaya ≤ 400 lx, mati di atasnya'],['✋','Mode Manual kembali ke Otomatis bila alat offline > 5 menit']
+].map(function(r){return '<div class="li"><span>'+r[0]+' '+r[1]+'</span></div>'}).join('');
 
-/* ===== KOMUNIKASI BLYNK (HTTPS API) ===== */
-const base=()=>`https://${cfg.server}/external/api`;
-const allPins=Array.from({length:32},(_,i)=>'v'+i).join('&');
-const W={}; let tm=0;
-function queue(p,v){ if(demo())return; W[p]=v; if(!tm){flush();tm=setTimeout(()=>{tm=0;flush()},100);} }
-function flush(){const k=Object.keys(W);if(!k.length)return;
- const q=k.map(p=>`v${p}=${encodeURIComponent(W[p])}`).join('&');k.forEach(p=>delete W[p]);
- fetch(`${base()}/update?token=${cfg.token}&${q}`,{keepalive:true}).catch(()=>toast('Gagal kirim ke Blynk'));}
+/* ===== durasi: ketik / geser / tombol cepat; detik>59 → menit, menit>59 → jam ===== */
+function lim(p,v){return Math.max(LIM[p][0],Math.min(LIM[p][1],Math.round(v)||LIM[p][0]))}
+function rDur(p,f){var v=lim(p,S[p]);sv('h'+p,Math.floor(v/60),f);sv('l'+p,v%60,f);sv('r'+p,v,f);$('t'+p).textContent='= '+fd(p===20?v:v*60)}
+function rin(p){var v=+$('r'+p).value;S[p]=v;rDur(p,1)}
+function commit(p){var v=lim(p,(+$('h'+p).value||0)*60+(+$('l'+p).value||0));put(p,v);rDur(p,1)}
 
-async function poll(){
- if(demo()){sim();online=true;ping=0;}
- else try{
-  const t=performance.now();
-  const [r,h]=await Promise.all([fetch(`${base()}/get?token=${cfg.token}&${allPins}`),fetch(`${base()}/isHardwareConnected?token=${cfg.token}`)]);
-  ping=Math.round(performance.now()-t);
-  if(r.ok){const d=await r.json(),now=Date.now();
-   for(const k in d){const p=+k.slice(1);if(now-(hold[p]||0)<2500)continue;
-    let v=Array.isArray(d[k])?d[k][0]:d[k];if(v===null||v==='')continue;S[p]=STR.has(p)?String(v):+v;}}
-  online=h.ok?(await h.json())===true:false;
- }catch(e){online=false;ping=0;}
- events();paint();setTimeout(poll,POLL_MS);
+/* ===== render ===== */
+function render(){
+ var m=+S[4]===1,t=S[0],h=S[1],l=S[2];
+ cls($('mA'),'act',!m);cls($('mM'),'act',!m?0:1);
+ $('hint').textContent=m?'Manual: tombol langsung mengirim perintah ke alat.':'Otomatis: alat mengatur sendiri. Pilih Manual untuk kontrol langsung.';
+ $('hm').textContent=m?'✋ Mode Manual':'⚙ Mode Otomatis';
+ $('v0').textContent=t==null?'--':(+t).toFixed(1);$('v1').textContent=h==null?'--':(+h).toFixed(1);$('v2').textContent=l==null?'--':Math.round(l);
+ $('s0').className='s'+(t==null?'':t>=T.WARN?' d':t>=T.ON?' w':'');
+ $('s1').className='s'+(h==null?'':(h<T.HLOW||h>T.HHIGH)?' w':'');
+ $('s2').className='s'+(l==null?'':(l<T.LLOW||l>T.LHIGH)?' w':'');
+ var a=String(S[6]||'Normal'),bad=a.trim().toLowerCase()!=='normal';
+ $('wt').textContent=bad?'Peringatan':'Semua Normal';$('wb').textContent=bad?a:'Tidak ada peringatan dari alat.';cls($('wn'),'ok',!bad);
+ var tips=[];
+ if(t!=null){
+  if(t>=T.WARN)tips.push(['🔥','Suhu sangat tinggi. Cek kipas, ventilasi, dan air pompa segera.']);
+  else if(t>=T.ON)tips.push(['🌀','Suhu mulai panas; kipas & ventilasi bekerja menurunkannya.']);
+  if(t>=T.PUMP)tips.push(['💧','Suhu ≥ '+T.PUMP+' °C: penyiraman otomatis ikut membantu mendinginkan.']);
+  if(h<T.HLOW)tips.push(['🏜️','Udara kering. Siram manual di tab Kontrol bila perlu.']);
+  if(h>T.HHIGH)tips.push(['🌫️','Udara terlalu lembap. Pastikan ventilasi terbuka.']);
+  if(l<T.LLOW)tips.push(['🌑','Gelap total. Periksa lampu LED / sensor cahaya.']);
+  if(l>T.LHIGH)tips.push(['☀️','Cahaya sudah cukup, LED dimatikan otomatis.']);
+  if(!tips.length)tips.push(['🌿','Semua kondisi ideal untuk tanaman. Tidak perlu tindakan.']);}
+ else tips.push(['⏳','Menunggu data dari alat…']);
+ $('tips').innerHTML=tips.map(function(x){return '<div class="tip"><span>'+x[0]+'</span><span>'+x[1]+'</span></div>'}).join('');
+ var ok=t!=null&&!bad;$('hl').textContent=t==null?'Menunggu data…':ok?'🌿 Greenhouse dalam kondisi baik':'⚠️ Greenhouse perlu perhatian';
+ $('hs').textContent=t==null?'':ok?'Semua sensor di rentang ideal.':'Lihat peringatan & saran di bawah.';
+ $('hn').textContent=demo?'🧪 Demo':online?'🟢 Alat online':'🔴 Alat offline';
+ DEV.forEach(function(d,i){var live=+S[d.st]===1,c=m?+S[d.cmd]===1:live;
+  $('ds'+i).textContent=live?d.on:d.off;$('hst'+i).textContent=live?d.on:d.off;
+  cls($('dc'+i),'live',live);cls($('hc'+i),'live',live);var b=$('tg'+i);b.disabled=!m;cls(b,'on',c);});
+ var pl=+S[9]===1;$('pst').textContent=pl?'Menyala':'Mati';$('hstp').textContent=pl?'Menyala':'Mati';
+ cls($('pcd'),'live',pl);cls($('hcp'),'live',pl);
+ $('pgo').disabled=!m||pl;$('pgo').textContent=pl?'💧 Sedang menyiram…':'💧 Siram '+fd(S[20]);
+ $('pnote').textContent=m?(pl?'Tunggu sampai pompa berhenti sendiri.':'Pompa mati sendiri setelah durasi di bawah.'):'Tombol aktif di mode Manual.';
+ rDur(20);rDur(14);rDur(16);
+ [[1,13,14,17],[2,15,16,18]].forEach(function(j){
+  var tm=/^\d\d:\d\d/.test(S[j[1]])?String(S[j[1]]).slice(0,5):'';if(tm)sv('tm'+j[1],tm);
+  var on=+S[j[3]]===1;cls($('tj'+j[0]),'on',on);$('sa'+j[0]).textContent=on?'Aktif':'Nonaktif';
+  $('se'+j[0]).textContent=tm?'Siram '+tm+' – '+addMin(tm,+S[j[2]])+' ('+fd(S[j[2]]*60)+')':'';});
+ EV.forEach(function(e,i){var x=e[3]&&e[3]();$('ea'+i).innerHTML=x?'<span class="a">AKTIF</span>':'—'});
+ if(String(S[19])!==lastClk){lastClk=String(S[19]);var k=/(\d{1,2}):(\d{2})(?::(\d{2}))?/.exec(lastClk);
+  if(k){clk.s=+k[1]*3600+k[2]*60+(+k[3]||0);clk.at=Date.now();clk.sec=!!k[3]}}
 }
+function tick(){if(clk.s==null)return;var s=(clk.s+Math.floor((Date.now()-clk.at)/1000))%86400;
+ $('clk').textContent=p2(Math.floor(s/3600))+':'+p2(Math.floor(s%3600/60))+(clk.sec?':'+p2(s%60):'')}
+function setConn(){var p=$('conn');p.className='pill '+(demo?'demo':online?'on':'off');$('connT').textContent=demo?'Demo':online?'Online':'Offline'}
+function stamp(){$('upd').textContent='Update '+new Date().toLocaleTimeString('id-ID')}
 
-/* ===== TULIS NILAI (optimistik: UI berubah seketika) ===== */
-let lastToast=0;
-function valid(p,v){const bad=m=>{if(Date.now()-lastToast>1200){toast(m);lastToast=Date.now();}return false;};
- if(p==20&&!(v<S[21]))return bad('Jarak PENUH harus lebih kecil dari jarak HABIS');
- if(p==21&&!(v>S[20]))return bad('Jarak HABIS harus lebih besar dari jarak PENUH');
- if(p==25&&!(S[26]-v>=2))return bad('Batas suhu rendah minimal 2° di bawah batas tinggi');
- if(p==26&&!(v-S[25]>=2))return bad('Batas suhu tinggi minimal 2° di atas batas rendah');
- return true;}
-function set(p,v){if(!valid(p,v)){paint(true);return false;}
- S[p]=v;hold[p]=Date.now();queue(p,v);paint();return true;}
+/* ===== kirim perintah ===== */
+function put(pin,val){pend[pin]={v:val,t:Date.now()+3000};S[pin]=val;render();
+ if(demo){simApply(pin,val);return}
+ fetch(HOST+'/external/api/update?token='+encodeURIComponent(TOKEN)+'&v'+pin+'='+encodeURIComponent(val),{keepalive:true})
+  .then(function(){setTimeout(poll,150)}).catch(function(){delete pend[pin]})}
+function toggle(i){if(+S[4]!==1)return;var p=DEV[i].cmd;put(p,+S[p]===1?0:1)}
+function setMode(m){if(+S[4]!==m)put(4,m)}
+function pumpGo(){if(+S[4]!==1||+S[9]===1)return;put(10,1);setTimeout(function(){put(10,0)},400)}
 
-/* ===== SIMULATOR (mode demo, tanpa token) ===== */
-function sim(){const t=Date.now()/1000;
- S[0]=+(29+Math.sin(t/20)*3).toFixed(1);S[1]=+(65+Math.cos(t/25)*8).toFixed(1);
- if(S[8]==1){if(S[2]<=S[24])S[5]=1;else if(S[2]>=S[24]+25)S[5]=0;}
- S[2]=Math.max(0,Math.min(100,S[2]+(S[5]?1.5:-.15)));
- S[3]=Math.max(0,Math.min(100,S[3]-(S[5]?.6:0)+(S[5]?0:.05)));
- if(!S._i){S._i=1;S[2]=45;S[3]=80;}
- S[4]=S[3]<=3?255:0;S[6]=S[2]<=S[24]?'Kering':S[2]>70?'Basah':'Lembap';
- S[7]=S[4]?'Air habis, isi tangki':'Air cukup';S[15]=new Date().toTimeString().slice(0,5);S[18]=S[5]?'Pompa menyala':'Siap';}
+/* ===== baca data ===== */
+function poll(){if(demo||busy)return;busy=true;var pins='';for(var i=0;i<=20;i++)pins+='&v'+i;var b=HOST+'/external/api/';
+ Promise.all([fetch(b+'get?token='+encodeURIComponent(TOKEN)+pins,{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}),
+  fetch(b+'isHardwareConnected?token='+encodeURIComponent(TOKEN),{cache:'no-store'}).then(function(r){return r.text()}).catch(function(){return 'false'})
+ ]).then(function(r){var d=r[0],now=Date.now();online=String(r[1]).trim()==='true';
+  for(var k in d){var p=+k.slice(1),v=d[k],pd=pend[p];
+   if(pd){if(now>pd.t||String(v)===String(pd.v))delete pend[p];else continue}
+   if(STR[p])S[p]=v==null?'':v;else if(v!==''&&v!=null)S[p]=+v;}
+  setConn();render();stamp()
+ }).catch(function(){online=false;setConn();$('upd').textContent='Gagal terhubung ke Blynk'}).then(function(){busy=false})}
 
-/* ===== EVENT TURUNAN DARI DATA ===== */
-const evState=()=>({air_habis:S[4]>0,tanah_kering:S[2]<=S[24],suhu_tidak_wajar:S[0]<S[25]||S[0]>S[26],wifi_terputus:!online});
-function events(){const e=evState();
- for(const E of EVENTS){if(!first&&e[E.k]&&!last[E.k]&&(!E.sw||S[E.sw])){
-  LOG.unshift(new Date().toTimeString().slice(0,8)+'  '+E.n);LOG=LOG.slice(0,8);toast('⚠ '+E.n);}}
- last=e;first=false;}
-
-/* ===== RENDER ===== */
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200);}
-function sliderRow(d){const [p,l,u,mn,mx,st]=d;
- return `<div class="row"><div class="rh"><span>${l}</span><output data-o="${p}"></output></div><input type="range" data-p="${p}" min="${mn}" max="${mx}" step="${st}"></div>`;}
-function buildUI(){
- for(const k in LISTS)$(`[data-list="${k}"]`).innerHTML=LISTS[k].map(sliderRow).join('');
- for(const s of SCHED)$(s.sel).innerHTML=`<div class="rh"><h3 style="margin:0">${s.n}</h3><button class="sw" data-sw="${s.on}" aria-label="Aktifkan ${s.n}"></button></div>
-  <label>Jam mulai</label><input type="time" data-time="${s.t}">
-  <div class="row" style="border:0;padding-bottom:0"><div class="rh"><span>Durasi siram</span><output data-o="${s.d}"></output></div><input type="range" data-p="${s.d}" min="1" max="240" step="1"></div>`;
- $$('[data-seg]').forEach(g=>g.innerHTML=MODES.map((m,i)=>`<button data-mode="${i}">${m}</button>`).join(''));
- $('#evList').innerHTML=EVENTS.map(E=>`<div class="row ev"><div>${E.n}<small>${E.d}</small></div><span class="st" data-ev="${E.k}">Aman</span>${E.sw?`<button class="sw" data-sw="${E.sw}" aria-label="${E.n}"></button>`:''}</div>`).join('');
- $$('input[type=range]').forEach(r=>{const p=+r.dataset.p;
-  r.addEventListener('pointerdown',()=>drag=p);
-  r.addEventListener('input',()=>{const v=+r.value;if(set(p,v))drag=p;});
-  r.addEventListener('change',()=>{drag=0;paint(true);});});
- $$('[data-time]').forEach(i=>i.addEventListener('change',()=>{if(i.value)set(+i.dataset.time,i.value);}));
- $$('[data-sw]').forEach(b=>b.addEventListener('click',()=>set(+b.dataset.sw,S[b.dataset.sw]?0:1)));
- $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>set(8,+b.dataset.mode)));
- $('#pump').addEventListener('click',()=>set(5,S[5]?0:1));
- $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
-}
-function go(n){$$('.pg').forEach(e=>e.classList.toggle('on',e.id=='p-'+n));
- $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go==n));$('#main').scrollTop=0;}
-const lvl=(v,lo,hi)=>v<lo?'bad':'';
-function chip(id,ok,t,f){const e=$(id);e.textContent=ok?t:f;e.classList.toggle('bad',!ok);}
-function paint(force){
- $('#dot').classList.toggle('on',online);
- $('#conn').textContent=(demo()?'Mode demo':online?'Alat terhubung':'Alat offline')+(ping?` · ${ping} ms`:'');
- $('#tTemp').textContent=fm(0,S[0])+'°C';$('#tSoil').textContent='Kondisi tanah: '+S[6];
- $('#cHum').textContent=fm(1,S[1])+'%';$('#cSoil').textContent=Math.round(S[2])+'%';$('#cTank').textContent=Math.round(S[3])+'%';
- chip('#pHum',S[1]>=30&&S[1]<=90,'Baik','Tidak ideal');chip('#pSoil',S[2]>S[24],'Baik','Kering');chip('#pTank',S[3]>=20&&!(S[4]>0),'Baik','Rendah');
- $('#pump').classList.toggle('on',!!S[5]);$('#pumpTxt').textContent=S[5]?'Pompa MENYALA':'Pompa MATI';
- $('#tankBar').style.width=Math.max(0,Math.min(100,S[3]))+'%';$('#tankPct').textContent=Math.round(S[3])+'%';
- $('#led').classList.toggle('on',S[4]>0);$('#v7').textContent=S[7];$('#v18').textContent=S[18];$('#v15').textContent=S[15];
- $$('[data-mode]').forEach(b=>b.classList.toggle('on',+b.dataset.mode==S[8]));
- $$('[data-sw]').forEach(b=>b.classList.toggle('on',!!S[b.dataset.sw]));
- $$('[data-time]').forEach(i=>{if(document.activeElement!==i)i.value=S[i.dataset.time];});
- $$('input[type=range]').forEach(r=>{const p=+r.dataset.p;if(drag!==p||force)r.value=S[p];
-  const o=$(`[data-o="${p}"]`),u=[...Object.values(LISTS).flat(),...SCHED.map(s=>[s.d,'','menit'])].find(d=>d[0]==p)[2];
-  if(o)o.textContent=fm(p,S[p])+' '+u;});
- const e=evState(),act=EVENTS.filter(E=>e[E.k]&&(!E.sw||S[E.sw]));
- $$('[data-ev]').forEach(s=>{const on=e[s.dataset.ev];s.textContent=on?'Aktif':'Aman';s.classList.toggle('bad',on);});
- const a=$('#alertBar');a.classList.toggle('on',act.length>0);a.textContent=act.length?'⚠ '+act.map(E=>E.n).join(' · '):'';
- $('#log').innerHTML=LOG.length?LOG.join('<br>'):'Belum ada event.';
-}
-
-/* ===== PENGATURAN KONEKSI ===== */
-$('#cfgBtn').onclick=()=>{$('#fTok').value=cfg.token;$('#fSrv').value=cfg.server;$('#demoTag').textContent=demo()?'demo':'';$('#sheet').classList.add('on');};
-$('#fClose').onclick=()=>$('#sheet').classList.remove('on');
-$('#fSave').onclick=()=>{cfg.token=$('#fTok').value.trim();cfg.server=$('#fSrv').value;
- try{localStorage.setItem('si_cfg',JSON.stringify(cfg));}catch(e){}
- $('#sheet').classList.remove('on');toast(demo()?'Mode demo aktif':'Menghubungkan ke Blynk…');};
-
-buildUI();paint();poll();
+/* ===== Demo ===== */
+function simApply(pin,val){
+ if(pin===4&&val===1){S[5]=S[3];S[8]=S[7];S[11]=S[12]}
+ if(S[4]===1){if(pin===5)S[3]=val;if(pin===8)S[7]=val;if(pin===11)S[12]=val;
+  if(pin===10&&val===1&&!+S[9]){S[9]=1;setTimeout(function(){S[9]=0;render()},S[20]*1000)}}
+ delete pend[pin];simAlerts();render()}
+function simAlerts(){var a=[];if(S[0]>=T.WARN)a.push('Suhu sangat tinggi');if(S[1]<T.HLOW)a.push('Kelembapan rendah');
+ if(S[1]>T.HHIGH)a.push('Kelembapan tinggi');if(S[2]<T.LLOW)a.push('Cahaya rendah');if(S[2]>T.LHIGH)a.push('Cahaya tinggi');S[6]=a.length?a.join('; '):'Normal'}
+function simTick(){var fan=+S[3],d=new Date(Date.now()+(480+new Date().getTimezoneOffset())*60000);
+ S[19]=p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds());
+ S[0]=S[0]==null?27:Math.max(20,Math.min(40,S[0]+(Math.random()-.4)*.8-(fan?.5:0)));
+ S[1]=S[1]==null?65:Math.max(40,Math.min(95,S[1]+(Math.random()-.5)*2+(+S[9]?2.5:-.4)));
+ S[2]=S[2]==null?250:Math.max(0,Math.min(900,S[2]+(Math.random()-.5)*40));
+ if(+S[4]===0){if(S[0]>=T.ON){S[3]=1;S[7]=1}else if(S[0]<=T.OFF){S[3]=0;S[7]=0}
+  if(S[1]<T.HLOW)S[9]=1;else if(S[1]>=75)S[9]=0;S[12]=S[2]<=T.LHIGH?1:0;S[5]=S[3];S[8]=S[7];S[11]=S[12]}
+ simAlerts();online=true;render();stamp()}
+function cfg(o){cls($('cfg'),'show',!!o);if(o)$('tok').value=TOKEN}
+function saveTok(){TOKEN=$('tok').value.trim();try{localStorage.setItem('gh_tok',TOKEN)}catch(e){}
+ demo=!TOKEN;S[0]=S[1]=S[2]=null;cfg(0);setConn();render();poll()}
+setConn();render();go(0);
+setInterval(function(){demo?simTick():poll()},POLL_MS);setInterval(tick,500);
+if(!demo)poll();else simTick();
 </script>
-</body>
-</html>
+<script>
+/* ===== TAMBAHAN: Ventilasi Servo. Tidak mengubah kode yang sudah ada ===== */
+(function(){
+ var PINS=[21,22,23,26],busy2=false,lastSend=0,tmr=0,prev={p:0,t:0},ptm=0,NM={21:'Idle',22:'Suhu tinggi',23:'RH tinggi'};
+ function mark(p){if(!NM[p])return;prev={p:p,t:Date.now()};clearTimeout(ptm);ptm=setTimeout(sRender,4200)}
+ if(demo){S[21]=20;S[22]=90;S[23]=60;S[25]=0;S[26]=20}
+ function clamp(v){return Math.max(0,Math.min(180,Math.round(+v||0)))}
+ function ctl(p,label,sub){
+  return '<div class="lb">'+label+'</div><div class="mut" style="margin:0">'+sub+'</div>'+
+  '<div class="du"><div class="in"><input type="number" inputmode="numeric" min="0" max="180" id="xn'+p+'"><span>\u00b0</span></div></div>'+
+  '<input type="range" id="xr'+p+'" min="0" max="180" step="1">'+
+  '<div class="chips">'+[0,30,45,60,90,120,180].map(function(a){return '<button class="chip" data-p="'+p+'" data-a="'+a+'">'+a+'\u00b0</button>'}).join('')+'</div>'}
+ var html=
+ '<h2>Ventilasi (Servo) <span>atur sudut buka</span></h2>'+
+ '<div class="card" id="xsvc">'+
+  '<div class="gw"><svg viewBox="0 0 200 118"><path d="M20 100A80 80 0 0 1 180 100" fill="none" stroke="rgba(15,58,77,.15)" stroke-width="14" stroke-linecap="round"/>'+
+   '<g class="nd" id="xnd" transform="rotate(-180 100 100)"><line x1="100" y1="100" x2="168" y2="100" stroke="#f5a623" stroke-width="6" stroke-linecap="round"/></g>'+
+   '<circle cx="100" cy="100" r="9" fill="#0f3a4d"/><text x="14" y="116" font-size="11" fill="#547887">0\u00b0</text><text x="90" y="22" font-size="11" fill="#547887">90\u00b0</text><text x="172" y="116" font-size="11" fill="#547887">180\u00b0</text></svg>'+
+   '<div><b id="xang">--\u00b0</b><small>Sudut ventilasi (perkiraan)</small><small id="xsrc"></small></div></div>'+
+  '<div class="dv" id="xsd"><span class="i">\ud83d\udee0\ufe0f</span><div class="g"><b>Setup Ventilasi Selesai</b><small id="xss">--</small></div><button class="tg" id="xtg"></button></div>'+
+  '<div class="mut" style="margin-top:8px">Urutan: atur sudut Idle, Suhu Tinggi, dan RH Tinggi, lalu nyalakan Setup. Selama Setup mati, servo ditahan di sudut Idle.</div>'+
+  ctl(21,'SUDUT IDLE','Saat kipas mati')+ctl(22,'SUDUT SUHU TINGGI','Saat suhu \u2265 30 \u00b0C')+ctl(23,'SUDUT RH TINGGI','Saat kelembapan \u2265 80 %')+
+ '</div>'+
+ '<h2>Servo Manual <span>mode Manual</span></h2>'+
+ '<div class="card" id="xsm"><div id="xmw">'+ctl(26,'SUDUT BEBAS SERVO','Sudut bebas servo (hanya mode Manual)')+'</div>'+
+  '<div class="mut" id="xmn" style="margin-top:8px"></div></div>';
+ $('pc').insertAdjacentHTML('afterend',html);
+ $('how').insertAdjacentHTML('afterend','<h2>Ventilasi (Servo)</h2><div class="card" id="xsh"></div>');
+
+ function est(){
+  if(prev.p&&Date.now()-prev.t<4000)return [clamp(S[prev.p]),'Pratinjau: '+NM[prev.p]];
+  if(+S[4]===1)return [clamp(S[26]),'Manual'];
+  if(+S[25]!==1)return [clamp(S[21]),'Ditahan di Idle'];
+  if(+S[7]!==1)return [clamp(S[21]),'Idle'];
+  return (+S[1]>=80&&+S[0]<30)?[clamp(S[23]),'RH tinggi']:[clamp(S[22]),'Suhu tinggi'];}
+
+ function sRender(){
+  var e=est(),m=+S[4]===1,on=+S[25]===1;
+  $('xnd').setAttribute('transform','rotate('+(e[0]-180)+' 100 100)');
+  $('xang').textContent=e[0]+'\u00b0';$('xsrc').textContent=e[1];
+  cls($('xtg'),'on',on);cls($('xsd'),'live',on);
+  $('xss').textContent=on?'Servo otomatis aktif':'Belum selesai: servo ditahan di sudut Idle';
+  PINS.forEach(function(p){var v=clamp(S[p]);sv('xn'+p,v);sv('xr'+p,v)});
+  cls($('xmw'),'xl',!m);
+  $('xmn').textContent=m?'Geser untuk menggerakkan servo langsung. Toggle Ventilasi di atas: ON = sudut Suhu Tinggi, OFF = sudut Idle.':'Aktif di mode Manual.';
+  $('xsh').innerHTML=[['\ud83e\ude9f','Idle: '+clamp(S[21])+'\u00b0','kipas mati / Setup belum selesai'],
+   ['\ud83c\udf21\ufe0f','Suhu \u2265 30 \u00b0C: '+clamp(S[22])+'\u00b0','sudut saat suhu tinggi'],
+   ['\ud83d\udca6','Kelembapan \u2265 80 %: '+clamp(S[23])+'\u00b0','sudut saat kelembapan tinggi'],
+   ['\u270b','Manual','toggle Ventilasi ON = sudut Suhu Tinggi, OFF = sudut Idle; atau geser sudut bebas']
+  ].map(function(r){return '<div class="li"><span>'+r[0]+' <b>'+r[1]+'</b><br><span class="mut">'+r[2]+'</span></span></div>'}).join('')}
+
+ function live(p,v){S[p]=v;mark(p);sRender();var n=Date.now();
+  if(n-lastSend>=120){lastSend=n;put(p,v)}else{clearTimeout(tmr);tmr=setTimeout(function(){lastSend=Date.now();put(p,v)},120)}}
+ PINS.forEach(function(p){
+  $('xr'+p).addEventListener('input',function(){live(p,+this.value)});
+  $('xr'+p).addEventListener('change',function(){clearTimeout(tmr);mark(p);put(p,+this.value)});
+  $('xn'+p).addEventListener('change',function(){mark(p);put(p,clamp(this.value))})});
+ [].forEach.call(document.querySelectorAll('#xsvc .chip,#xsm .chip'),function(b){
+  b.addEventListener('click',function(){var p=+b.dataset.p;if(p===26&&+S[4]!==1)return;mark(p);put(p,+b.dataset.a)})});
+ $('xtg').addEventListener('click',function(){put(25,+S[25]===1?0:1)});
+
+ /* hubungkan ke render yang sudah ada tanpa mengubahnya */
+ var baseRender=render;render=function(){baseRender();sRender()};
+
+ /* baca V21-V23, V25, V26 dari Blynk (pola sama dengan poll() yang ada) */
+ function pollServo(){if(demo||busy2)return;busy2=true;
+  fetch(HOST+'/external/api/get?token='+encodeURIComponent(TOKEN)+'&v21&v22&v23&v25&v26',{cache:'no-store'})
+   .then(function(r){if(!r.ok)throw 0;return r.json()})
+   .then(function(d){var now=Date.now();
+    for(var k in d){var p=+k.slice(1),v=d[k],pd=pend[p];
+     if(pd){if(now>pd.t||String(v)===String(pd.v))delete pend[p];else continue}
+     if(v!==''&&v!=null)S[p]=+v}
+    render()})
+   .catch(function(){}).then(function(){busy2=false})}
+ setInterval(pollServo,POLL_MS);pollServo();sRender();
+})();
+</script>
+</body></html>
